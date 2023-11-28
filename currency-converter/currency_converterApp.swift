@@ -11,7 +11,7 @@ import SwiftUI
 struct currency_converterApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: ContentViewModel(), service: ExchangeRatesService(request: RequestManager()))
         }
     }
 }
