@@ -19,10 +19,6 @@ class CurrencyService: Service, ObservableObject {
     }
     
     private func getCurrencies() async {
-        //        print("HEY CURRENCIES")
-        //        let currenciesData = ["USD": "Dollar"]
-        //        await self.currenciesData.setValue(currenciesData)
-        //        return
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 self.currenciesData.setIsLoading(self.request

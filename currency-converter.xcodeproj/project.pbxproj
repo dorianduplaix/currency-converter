@@ -23,8 +23,6 @@
 		E3190D9E2AFE9D9F006F618C /* CurrencyChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3190D9D2AFE9D9F006F618C /* CurrencyChoiceView.swift */; };
 		E3190DA12AFEAD20006F618C /* NumberFormatter+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3190DA02AFEAD20006F618C /* NumberFormatter+extension.swift */; };
 		E38139102B0F908700CF09F4 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E381390F2B0F908700CF09F4 /* Loadable.swift */; };
-		E38139132B0F95F700CF09F4 /* OpenExchangeRatesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38139122B0F95F700CF09F4 /* OpenExchangeRatesService.swift */; };
-		E38139162B0F97C900CF09F4 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38139152B0F97C900CF09F4 /* Store.swift */; };
 		E38139182B0F9C4600CF09F4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38139172B0F9C4600CF09F4 /* Constants.swift */; };
 		E381391A2B0FA2A600CF09F4 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38139192B0FA2A600CF09F4 /* LoadingView.swift */; };
 		E381391C2B0FA51D00CF09F4 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E381391B2B0FA51D00CF09F4 /* ErrorView.swift */; };
@@ -79,8 +77,6 @@
 		E3190D9D2AFE9D9F006F618C /* CurrencyChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyChoiceView.swift; sourceTree = "<group>"; };
 		E3190DA02AFEAD20006F618C /* NumberFormatter+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NumberFormatter+extension.swift"; sourceTree = "<group>"; };
 		E381390F2B0F908700CF09F4 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
-		E38139122B0F95F700CF09F4 /* OpenExchangeRatesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenExchangeRatesService.swift; sourceTree = "<group>"; };
-		E38139152B0F97C900CF09F4 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		E38139172B0F9C4600CF09F4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E38139192B0FA2A600CF09F4 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		E381391B2B0FA51D00CF09F4 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
@@ -146,7 +142,6 @@
 		E3190D5E2AF927B4006F618C /* currency-converter */ = {
 			isa = PBXGroup;
 			children = (
-				E38139142B0F97C100CF09F4 /* Store */,
 				E38139112B0F95CD00CF09F4 /* Service */,
 				E3190D9F2AFEAD0B006F618C /* Extension */,
 				E3190D962AFBF592006F618C /* IO */,
@@ -242,18 +237,9 @@
 			isa = PBXGroup;
 			children = (
 				E38139372B18A53900CF09F4 /* OpenExhangeRates */,
-				E38139122B0F95F700CF09F4 /* OpenExchangeRatesService.swift */,
 				E38139222B189C2500CF09F4 /* Service.swift */,
 			);
 			path = Service;
-			sourceTree = "<group>";
-		};
-		E38139142B0F97C100CF09F4 /* Store */ = {
-			isa = PBXGroup;
-			children = (
-				E38139152B0F97C900CF09F4 /* Store.swift */,
-			);
-			path = Store;
 			sourceTree = "<group>";
 		};
 		E38139242B189C3800CF09F4 /* Storage */ = {
@@ -429,7 +415,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E381392A2B189C7800CF09F4 /* Model.swift in Sources */,
-				E38139132B0F95F700CF09F4 /* OpenExchangeRatesService.swift in Sources */,
 				E3190D8A2AFA461D006F618C /* OpenExchangeRatesUrl.swift in Sources */,
 				E38139262B189C4700CF09F4 /* Storage.swift in Sources */,
 				E3190D982AFBF5BC006F618C /* Request.swift in Sources */,
@@ -446,7 +431,6 @@
 				E3190D622AF927B4006F618C /* ContentView.swift in Sources */,
 				E381393B2B18A55700CF09F4 /* CurrencyService.swift in Sources */,
 				E38139102B0F908700CF09F4 /* Loadable.swift in Sources */,
-				E38139162B0F97C900CF09F4 /* Store.swift in Sources */,
 				E38139282B189C4F00CF09F4 /* DefaultStorage.swift in Sources */,
 				E3190D912AFAA750006F618C /* RequestManager.swift in Sources */,
 				E3190D8D2AFA469C006F618C /* Conversion.swift in Sources */,

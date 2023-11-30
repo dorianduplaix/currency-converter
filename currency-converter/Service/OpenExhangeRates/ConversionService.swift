@@ -31,10 +31,6 @@ class ConversionService: Service, ObservableObject {
     }
     
     private func getConversions() async {
-        //        print("HEY CONVERSIONS")
-        //        let conversionData = ConversionRates(disclaimer: "", license: "", timestamp: Date(), base: "100", rates: ["USD": 150])
-        //        await self.conversionData.setValue(conversionData)
-        //        return
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 self.conversionData.setIsLoading(self.request

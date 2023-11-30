@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-public struct LoadingView: View {
+struct LoadingView: View {
     
-    public var body: some View {
+    var body: some View {
         VStack {
             Spacer()
             Text("Loading ...")

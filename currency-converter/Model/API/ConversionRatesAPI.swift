@@ -12,7 +12,7 @@ struct ConversionRatesAPI: Codable {
     var base: String
     var rates: [String: Double]
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let timeInterval = try container.decode(Double.self, forKey: .timestamp)
         timestamp = Date(timeIntervalSince1970: timeInterval)

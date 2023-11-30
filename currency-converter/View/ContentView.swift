@@ -32,18 +32,18 @@ struct ContentView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    @ViewBuilder 
+    @ViewBuilder
     private var content: some View {
         switch conversionService.conversionData {
             case .isLoading(let last, _):
-                if last != nil, let currencies = currencyService.currenciesData.value {
-                    converterMainView(currencies)
+                if let lastValue = last, let currencies = currencyService.currenciesData.value {
+                    converterMainView(lastValue, currencies)
                 } else {
                     LoadingView()
                 }
-            case .loaded(_):
+            case .loaded(let last):
                 if let currencies = currencyService.currenciesData.value {
-                    converterMainView(currencies)
+                    converterMainView(last, currencies)
                 } else {
                     LoadingView()
                 }
@@ -55,7 +55,7 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    private func converterMainView(_ lastValue: Currency) -> some View {
+    private func converterMainView(_ rates: ConversionRates, _ currency: Currency) -> some View {
         ScrollView {
             VStack {
                 VStack(spacing: 20) {
@@ -64,8 +64,8 @@ struct ContentView: View {
                 Divider()
                     .background(Color.white)
                     .padding(EdgeInsets(top: 15, leading: 20, bottom: 10, trailing: 20))
-                ForEach(lastValue.sorted(by: <), id: \.key) { currency in
-                    item(currencySymbol: currency.key)
+                ForEach(currency.sorted(by: <), id: \.key) { currency in
+                    item(rates, currencySymbol: currency.key)
                 }
             }
             .navigationTitle("Currency converter")
@@ -140,7 +140,7 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    private func item(currencySymbol: String) -> some View {
+    private func item(_ conversionRates: ConversionRates, currencySymbol: String) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 14)
                 .fill(.gray)
@@ -159,12 +159,12 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 0))
                 Text(viewModel.calculate(amount: inputValue,
-                                                  selectedCurrency: selectedCurrency,
-                                                  currencyToConvert: currencySymbol))
-                    .frame(alignment: .trailing)
-                    .font(Font.headline.weight(.heavy))
-                    .foregroundColor(.white)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
+                                         selectedCurrency: selectedCurrency,
+                                         currencyToConvert: currencySymbol))
+                .frame(alignment: .trailing)
+                .font(Font.headline.weight(.heavy))
+                .foregroundColor(.white)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
             }
         }
     }

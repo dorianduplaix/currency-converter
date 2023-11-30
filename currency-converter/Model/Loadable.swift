@@ -27,24 +27,6 @@ enum Loadable<Value> {
             default: return nil
         }
     }
-    
-    var loading: Bool {
-        switch self {
-            case .isLoading:
-                return true
-            default:
-                return false
-        }
-    }
-    
-    var error: Error? {
-        switch self {
-            case let .failed(error):
-                return error
-            default:
-                return nil
-        }
-    }
 }
 
 extension Loadable {
@@ -61,19 +43,5 @@ extension Loadable {
     @MainActor 
     mutating func setValue(_ value: Value) {
         self = .loaded(value)
-    }
-    
-    mutating func cancelLoading() {
-        switch self {
-            case let .isLoading(last, cancelToken):
-                cancelToken.cancel()
-                if let last {
-                    self = .loaded(last)
-                } else {
-                    self = .failed(CustomError.cancelled)
-                }
-            default:
-                break
-        }
     }
 }
