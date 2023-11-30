@@ -2,23 +2,35 @@
 //  ConversionRates.swift
 //  currency-converter
 //
-//  Created by Dorian Duplaix on 07/11/2023.
+//  Created by Dorian Duplaix on 30/11/2023.
 //
 
 import Foundation
+import RealmSwift
 
-public struct ConversionRates: Codable {
-    public let disclaimer: String
-    public let license: String
-    public let timestamp: Date
-    public let base: String
-    public let rates: [String: Double]
+struct ConversionRates: Codable, Model, Equatable {
+    var timestamp: Date
+    var base: String
+    var rates: [String: Double]
     
-    public init(disclaimer: String, license: String, timestamp: Date, base: String, rates: [String : Double]) {
-        self.disclaimer = disclaimer
-        self.license = license
-        self.timestamp = timestamp
-        self.base = base
-        self.rates = rates
+    public init(_ apiModel: ConversionRatesAPI) {
+        self.base = apiModel.base
+        // looks like API is updating result every 1h. doing an init at Date() would be more relevant to the user rather than seeing
+        // 9:00 for an entire Hour of refresh
+        self.timestamp = Date()
+        self.rates = apiModel.rates
+    }
+    
+    public init(_ dbModel: ConversionRatesDB) {
+        self.base = dbModel.base
+        self.timestamp = dbModel.timestamp
+        self.rates = Dictionary<String, Double>()
+        zip(dbModel.rates.keys, dbModel.rates.values).forEach { (key, value) in
+            self.rates[key] = value
+        }
+    }
+    
+    func toDataBaseObject() -> Object {
+        return ConversionRatesDB(timestamp: self.timestamp, base: self.base, rates: self.rates)
     }
 }

@@ -11,9 +11,9 @@ struct CurrencyChoiceView: View {
     @Environment(\.dismiss) var dismiss
     @Binding private var selectedCurrency: String
     @State private var searchText = ""
-    private let currencies: Currencies
+    private let currencies: Currency
     
-    init(currencies: Currencies, selectedCurrency: Binding<String>) {
+    init(currencies: Currency, selectedCurrency: Binding<String>) {
         self.currencies = currencies
         self._selectedCurrency = selectedCurrency
     }

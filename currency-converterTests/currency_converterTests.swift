@@ -1,5 +1,5 @@
 //
-//  currency_converterTests.swift
+//  CurrencyConverterAppTests.swift
 //  currency-converterTests
 //
 //  Created by Dorian Duplaix on 06/11/2023.

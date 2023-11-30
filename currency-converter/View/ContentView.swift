@@ -9,25 +9,24 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-    @StateObject private var viewModel: ContentViewModel
     @State private var showingSheet = false
     @State private var selectedCurrency = "USD"
     @State private var inputValue: Double = 100.0
     @FocusState private var isFocused: Bool
-    @ObservedObject var exchangeRatesService: ExchangeRatesService
+    @ObservedObject var conversionService: ConversionService
+    @ObservedObject var currencyService: CurrencyService
+    private var viewModel = ContentViewModel()
     
-    public init(viewModel: ContentViewModel, service: ExchangeRatesService) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-        isFocused = false
-        self.exchangeRatesService = service
+    public init(conversionService: ConversionService, currencyService: CurrencyService) {
+        self.conversionService = conversionService
+        self.currencyService = currencyService
     }
     
     var body: some View {
         NavigationView {
             content
                 .onAppear {
-                    viewModel.getConversions()
-                    viewModel.getCurrencies()
+                    load()
                 }
         }
         .navigationViewStyle(StackNavigationViewStyle())
@@ -35,15 +34,19 @@ struct ContentView: View {
     
     @ViewBuilder 
     private var content: some View {
-        switch exchangeRatesService.conversionData {
-            case .isLoading(let last, let cancelBag):
-                if let lastValue = last {
-                    converterMainView
+        switch conversionService.conversionData {
+            case .isLoading(let last, _):
+                if last != nil, let currencies = currencyService.currenciesData.value {
+                    converterMainView(currencies)
                 } else {
                     LoadingView()
                 }
-            case .loaded(let value):
-                converterMainView(value)
+            case .loaded(_):
+                if let currencies = currencyService.currenciesData.value {
+                    converterMainView(currencies)
+                } else {
+                    LoadingView()
+                }
             case .failed(let error):
                 errorView(error)
             default:
@@ -52,7 +55,7 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    private func converterMainView(_ rates: ConversionRates): some View {
+    private func converterMainView(_ lastValue: Currency) -> some View {
         ScrollView {
             VStack {
                 VStack(spacing: 20) {
@@ -61,14 +64,11 @@ struct ContentView: View {
                 Divider()
                     .background(Color.white)
                     .padding(EdgeInsets(top: 15, leading: 20, bottom: 10, trailing: 20))
-                ForEach(viewModel.currencies.sorted(by: <), id: \.key) { currency in
+                ForEach(lastValue.sorted(by: <), id: \.key) { currency in
                     item(currencySymbol: currency.key)
                 }
             }
             .navigationTitle("Currency converter")
-            .onAppear {
-                reload()
-            }
             .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
         }
         .background(Color.black)
@@ -170,21 +170,20 @@ struct ContentView: View {
     }
     
     private func errorView(_ error: Error) -> some View {
-        ErrorView(action: reload, error: error)
+        ErrorView(action: load, error: error)
     }
     
-    private func reload() {
+    private func load() {
         Task {
-            await exchangeRatesService.getConversions
-            await exchangeRatesService.getCurrencies
+            await conversionService.loadIfNeeded()
+            await currencyService.loadIfNeeded()
         }
     }
 }
 
 class ContentViewModel: ObservableObject {
     @Published var conversionRates: ConversionRates?
-    @Published var currencies: Currencies = [:]
-    private var cancellables = Set<AnyCancellable>()
+    @Published var currencies: Currency = [:]
     
     func calculate(amount: Double, selectedCurrency: String, currencyToConvert: String) -> String {
         guard let conversionRates else {
