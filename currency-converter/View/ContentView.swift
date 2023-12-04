@@ -183,7 +183,7 @@ struct ContentView: View {
 
 class ContentViewModel: ObservableObject {
     @Published var conversionRates: ConversionRates?
-    @Published var currencies: Currency = [:]
+    @Published var currencies:Currency = [:]
     
     func calculate(amount: Double, selectedCurrency: String, currencyToConvert: String) -> String {
         guard let conversionRates else {

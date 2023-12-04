@@ -17,6 +17,15 @@
         "revision" : "fd199ce07edb4db69e862f74151b95602aad3b43",
         "version" : "10.44.0"
       }
+    },
+    {
+      "identity" : "swiftyjson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
+      "state" : {
+        "revision" : "2b6054efa051565954e1d2b9da831680026cd768",
+        "version" : "4.3.0"
+      }
     }
   ],
   "version" : 2

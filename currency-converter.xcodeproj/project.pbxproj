@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -38,6 +38,7 @@
 		E38139362B18A41000CF09F4 /* CurrencyDictionnary+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38139352B18A41000CF09F4 /* CurrencyDictionnary+extensions.swift */; };
 		E38139392B18A54E00CF09F4 /* ConversionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38139382B18A54E00CF09F4 /* ConversionService.swift */; };
 		E381393B2B18A55700CF09F4 /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E381393A2B18A55700CF09F4 /* CurrencyService.swift */; };
+		E38139422B18FD5C00CF09F4 /* MySDK in Frameworks */ = {isa = PBXBuildFile; productRef = E38139412B18FD5C00CF09F4 /* MySDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E38139422B18FD5C00CF09F4 /* MySDK in Frameworks */,
 				E38139212B189BE900CF09F4 /* RealmSwift in Frameworks */,
 				E381391F2B189BE900CF09F4 /* Realm in Frameworks */,
 			);
@@ -296,6 +298,7 @@
 			packageProductDependencies = (
 				E381391E2B189BE900CF09F4 /* Realm */,
 				E38139202B189BE900CF09F4 /* RealmSwift */,
+				E38139412B18FD5C00CF09F4 /* MySDK */,
 			);
 			productName = "currency-converter";
 			productReference = E3190D5C2AF927B4006F618C /* currency-converter.app */;
@@ -371,6 +374,7 @@
 			mainGroup = E3190D532AF927B3006F618C;
 			packageReferences = (
 				E381391D2B189BE900CF09F4 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				E38139402B18FD5C00CF09F4 /* XCLocalSwiftPackageReference "../MySDK" */,
 			);
 			productRefGroup = E3190D5D2AF927B4006F618C /* Products */;
 			projectDirPath = "";
@@ -768,6 +772,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		E38139402B18FD5C00CF09F4 /* XCLocalSwiftPackageReference "../MySDK" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MySDK;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		E381391D2B189BE900CF09F4 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -789,6 +800,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E381391D2B189BE900CF09F4 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		E38139412B18FD5C00CF09F4 /* MySDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MySDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
