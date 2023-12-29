@@ -37,6 +37,7 @@ class CurrencyService: Service, ObservableObject {
                           receiveValue: { (value: [String: String]) in
                     DispatchQueue.main.async {
                         self.currenciesData.setValue(value)
+                        print("Success call, CURRENCY VALUE is : ", value)
                         continuation.resume()
                     }
                 }

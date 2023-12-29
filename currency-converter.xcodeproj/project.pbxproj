@@ -58,6 +58,29 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E387AE8D2B1F15C30071DE50 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E387AEA02B1F18B50071DE50 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		E3190D5C2AF927B4006F618C /* currency-converter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "currency-converter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3190D5F2AF927B4006F618C /* currency_converterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = currency_converterApp.swift; sourceTree = "<group>"; };
@@ -289,6 +312,8 @@
 				E3190D582AF927B3006F618C /* Sources */,
 				E3190D592AF927B3006F618C /* Frameworks */,
 				E3190D5A2AF927B3006F618C /* Resources */,
+				E387AE8D2B1F15C30071DE50 /* Embed Foundation Extensions */,
+				E387AEA02B1F18B50071DE50 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

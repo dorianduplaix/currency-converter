@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 class ConversionService: Service, ObservableObject {
     @Published private (set) var conversionData: Loadable<ConversionRates> = .notRequested {
@@ -48,6 +47,7 @@ class ConversionService: Service, ObservableObject {
                     },
                           receiveValue: { (value: ConversionRates) in
                     DispatchQueue.main.async {
+                        print("Success call, CONVERSION VALUE is : ", value)
                         self.conversionData.setValue(value)
                         continuation.resume()
                     }

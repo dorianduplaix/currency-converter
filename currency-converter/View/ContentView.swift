@@ -55,17 +55,17 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    private func converterMainView(_ rates: ConversionRates, _ currency: Currency) -> some View {
+    private func converterMainView(_ rates: ConversionRates, _ currencies: Currency) -> some View {
         ScrollView {
             VStack {
                 VStack(spacing: 20) {
-                    textField
+                    textField(currencies: currencies)
                 }
                 Divider()
                     .background(Color.white)
                     .padding(EdgeInsets(top: 15, leading: 20, bottom: 10, trailing: 20))
-                ForEach(currency.sorted(by: <), id: \.key) { currency in
-                    item(rates, currencySymbol: currency.key)
+                ForEach(currencies.sorted(by: <), id: \.key) { currency in
+                    item(rates, currencies: currencies, currencySymbol: currency.key)
                 }
             }
             .navigationTitle("Currency converter")
@@ -78,7 +78,7 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    private var textField: some View {
+    private func textField(currencies: Currency) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .strokeBorder(Color.gray, lineWidth: 1)
@@ -111,7 +111,7 @@ struct ContentView: View {
                         showingSheet.toggle()
                     })
                     .sheet(isPresented: $showingSheet) {
-                        CurrencyChoiceView(currencies: viewModel.currencies, selectedCurrency: $selectedCurrency)
+                        CurrencyChoiceView(currencies: currencies, selectedCurrency: $selectedCurrency)
                     }
             }
         }
@@ -140,7 +140,7 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    private func item(_ conversionRates: ConversionRates, currencySymbol: String) -> some View {
+    private func item(_ conversionRates: ConversionRates, currencies: Currency, currencySymbol: String) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 14)
                 .fill(.gray)
@@ -152,14 +152,15 @@ struct ContentView: View {
                     Text(currencySymbol)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(Font.headline.weight(.heavy))
-                    Text(viewModel.currencies[currencySymbol] ?? "-")
+                    Text(currencies[currencySymbol] ?? "-")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.system(size: 12))
                 }
                 .foregroundColor(.white)
                 .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 0))
                 Text(viewModel.calculate(amount: inputValue,
-                                         selectedCurrency: selectedCurrency,
+                                         selectedCurrency: selectedCurrency, 
+                                         conversionRates: conversionRates,
                                          currencyToConvert: currencySymbol))
                 .frame(alignment: .trailing)
                 .font(Font.headline.weight(.heavy))
@@ -182,13 +183,7 @@ struct ContentView: View {
 }
 
 class ContentViewModel: ObservableObject {
-    @Published var conversionRates: ConversionRates?
-    @Published var currencies:Currency = [:]
-    
-    func calculate(amount: Double, selectedCurrency: String, currencyToConvert: String) -> String {
-        guard let conversionRates else {
-            return "-"
-        }
+    func calculate(amount: Double, selectedCurrency: String, conversionRates: ConversionRates, currencyToConvert: String) -> String {
         let intoUSD = (amount / (conversionRates.rates[selectedCurrency] ?? 0))
         let convertedAmount = intoUSD * (conversionRates.rates[currencyToConvert] ?? 0)
         return convertedAmount.formatted(.currency(code: currencyToConvert))
