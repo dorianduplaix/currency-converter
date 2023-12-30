@@ -9,12 +9,10 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-    @State private var showingSheet = false
     @State private var selectedCurrency = "USD"
     @State private var inputValue: Double = 100.0
-    @FocusState private var isFocused: Bool
-    @ObservedObject var conversionService: ConversionService
-    @ObservedObject var currencyService: CurrencyService
+    @ObservedObject private var conversionService: ConversionService
+    @ObservedObject private var currencyService: CurrencyService
     private var viewModel = ContentViewModel()
     
     public init(conversionService: ConversionService, currencyService: CurrencyService) {
@@ -32,6 +30,7 @@ struct ContentView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    // Seems like logic inside the View but it is how to manage the view depending on their state
     @ViewBuilder
     private var content: some View {
         switch conversionService.conversionData {
@@ -48,7 +47,7 @@ struct ContentView: View {
                     LoadingView()
                 }
             case .failed(let error):
-                errorView(error)
+                ErrorView(action: load, error: error)
             default:
                 LoadingView()
         }
@@ -59,13 +58,18 @@ struct ContentView: View {
         ScrollView {
             VStack {
                 VStack(spacing: 20) {
-                    textField(currencies: currencies)
+                    CurrencyTextfield(currencies: currencies, selectedCurrency: $selectedCurrency, inputValue: $inputValue)
                 }
                 Divider()
                     .background(Color.white)
                     .padding(EdgeInsets(top: 15, leading: 20, bottom: 10, trailing: 20))
                 ForEach(currencies.sorted(by: <), id: \.key) { currency in
-                    item(rates, currencies: currencies, currencySymbol: currency.key)
+                    let currencyValue = viewModel.calculate(amount: inputValue,
+                                                            selectedCurrency: selectedCurrency,
+                                                            conversionRates: rates,
+                                                            currencyToConvert: currency.key)
+                    let currencyItem = CurrencyItem(symbol: currency.key, name: currency.value, value: currencyValue)
+                    Item(withValue: true, currencyItem: currencyItem)
                 }
             }
             .navigationTitle("Currency converter")
@@ -77,103 +81,6 @@ struct ContentView: View {
         .toolbarBackground(.visible, for: .navigationBar)
     }
     
-    @ViewBuilder
-    private func textField(currencies: Currency) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .strokeBorder(Color.gray, lineWidth: 1)
-                .padding(EdgeInsets(top: -10, leading: 20, bottom: -10, trailing: 20))
-            HStack {
-                TextField("Enter an amount", value: $inputValue, formatter: NumberFormatter.twoDecimals)
-                    .focused($isFocused)
-                    .textFieldStyle(PlainTextFieldStyle())
-                    .font(Font.headline.weight(.heavy))
-                    .multilineTextAlignment(.leading)
-                    .keyboardType(.numberPad)
-                    .foregroundColor(.white)
-                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 20))
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard){
-                            HStack {
-                                EmptyView()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                Button("Done") {
-                                    isFocused = false
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .foregroundColor(.primary)
-                            }
-                        }
-                    }
-                Spacer()
-                currencySelector
-                    .onTapGesture(perform: {
-                        showingSheet.toggle()
-                    })
-                    .sheet(isPresented: $showingSheet) {
-                        CurrencyChoiceView(currencies: currencies, selectedCurrency: $selectedCurrency)
-                    }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private var currencySelector: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 14)
-                .fill(.gray)
-                .opacity(0.4)
-                .frame(height: 30)
-            HStack {
-                Text(selectedCurrency)
-                    .font(Font.headline.weight(.heavy))
-                    .foregroundColor(.white)
-                Image("arrow-down-bold")
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.white)
-                    .frame(width: 14, height: 14, alignment: .trailing)
-            }
-            .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 10))
-        }
-        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
-    }
-    
-    @ViewBuilder
-    private func item(_ conversionRates: ConversionRates, currencies: Currency, currencySymbol: String) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 14)
-                .fill(.gray)
-                .opacity(0.4)
-                .frame(height: 60)
-                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
-            HStack {
-                VStack(spacing: 7) {
-                    Text(currencySymbol)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(Font.headline.weight(.heavy))
-                    Text(currencies[currencySymbol] ?? "-")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size: 12))
-                }
-                .foregroundColor(.white)
-                .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 0))
-                Text(viewModel.calculate(amount: inputValue,
-                                         selectedCurrency: selectedCurrency, 
-                                         conversionRates: conversionRates,
-                                         currencyToConvert: currencySymbol))
-                .frame(alignment: .trailing)
-                .font(Font.headline.weight(.heavy))
-                .foregroundColor(.white)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
-            }
-        }
-    }
-    
-    private func errorView(_ error: Error) -> some View {
-        ErrorView(action: load, error: error)
-    }
-    
     private func load() {
         Task {
             await conversionService.loadIfNeeded()
@@ -182,6 +89,7 @@ struct ContentView: View {
     }
 }
 
+// Only logic here
 class ContentViewModel: ObservableObject {
     func calculate(amount: Double, selectedCurrency: String, conversionRates: ConversionRates, currencyToConvert: String) -> String {
         let intoUSD = (amount / (conversionRates.rates[selectedCurrency] ?? 0))
