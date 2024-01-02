@@ -92,7 +92,10 @@ struct ContentView: View {
 // Only logic here
 class ContentViewModel: ObservableObject {
     func calculate(amount: Double, selectedCurrency: String, conversionRates: ConversionRates, currencyToConvert: String) -> String {
-        let intoUSD = (amount / (conversionRates.rates[selectedCurrency] ?? 0))
+        guard let conversion = conversionRates.rates[selectedCurrency] else {
+            return "-"
+        }
+        let intoUSD = amount / conversion
         let convertedAmount = intoUSD * (conversionRates.rates[currencyToConvert] ?? 0)
         return convertedAmount.formatted(.currency(code: currencyToConvert))
     }
